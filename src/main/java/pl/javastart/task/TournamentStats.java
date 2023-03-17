@@ -30,20 +30,17 @@ public class TournamentStats {
         System.out.println("Po jakim parametrze posortować? (" + FIRST_NAME + " - imię, "
                 + LAST_NAME + " - nazwisko, " + RESULT + " - wynik)");
         int option = scanner.nextInt();
+        if (option == FIRST_NAME) {
+            sortComparator = new FirstNameComparator();
+        } else if (option == LAST_NAME) {
+            sortComparator = new LastNameComparator();
+        } else if (option == RESULT) {
+            sortComparator = new ResultComparator();
+        }
         System.out.println("Sortować rosnąco czy malejąco? (" + ASCENDING + " - rosnąco, " + DESCENDING + " - malejąco)");
         int option2 = scanner.nextInt();
-        if (option == FIRST_NAME && option2 == ASCENDING) {
-            sortComparator = new FirstNameComparator();
-        } else if (option == FIRST_NAME && option2 == DESCENDING) {
-            sortComparator = new FirstNameComparator().reversed();
-        } else if (option == LAST_NAME && option2 == ASCENDING) {
-            sortComparator = new LastNameComparator();
-        } else if (option == LAST_NAME && option2 == DESCENDING) {
-            sortComparator = new LastNameComparator().reversed();
-        } else if (option == RESULT && option2 == ASCENDING) {
-            sortComparator = new ResultComparator();
-        } else if (option == RESULT && option2 == DESCENDING) {
-            sortComparator = new ResultComparator().reversed();
+        if (option2 == DESCENDING) {
+            sortComparator = sortComparator.reversed();
         }
         return sortComparator;
     }
