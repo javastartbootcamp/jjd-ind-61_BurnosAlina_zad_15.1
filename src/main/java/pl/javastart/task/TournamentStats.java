@@ -8,6 +8,8 @@ public class TournamentStats {
     private static final int FIRST_NAME = 1;
     private static final int LAST_NAME = 2;
     private static final int RESULT = 3;
+
+    private static final int ASCENDING = 1;
     private static final int DESCENDING = 2;
 
     void run(Scanner scanner) {
@@ -17,30 +19,33 @@ public class TournamentStats {
             result = getResult(scanner);
             addParticipantResult(result, participants);
         } while (!result.equals(STOP));
-        sortByParameter(scanner, participants);
-        sortAscendingOrDescending(scanner, participants);
+        Comparator<Participant> sortComparator = createComparator(scanner);
+        participants.sort(sortComparator);
         TournamentStatsWriter writer = new TournamentStatsWriter();
         writer.writeStatsToFile(participants);
     }
 
-    private void sortAscendingOrDescending(Scanner scanner, List<Participant> participants) {
-        System.out.println("Sortować rosnąco czy malejąco? (1 - rosnąco, 2 - malejąco)");
+    private Comparator<Participant> createComparator(Scanner scanner) {
+        Comparator<Participant> sortComparator = null;
+        System.out.println("Po jakim parametrze posortować? (" + FIRST_NAME + " - imię, "
+                + LAST_NAME + " - nazwisko, " + RESULT + " - wynik)");
         int option = scanner.nextInt();
-        if (option == DESCENDING) {
-            Collections.reverse(participants);
+        System.out.println("Sortować rosnąco czy malejąco? (" + ASCENDING + " - rosnąco, " + DESCENDING + " - malejąco)");
+        int option2 = scanner.nextInt();
+        if (option == FIRST_NAME && option2 == ASCENDING) {
+            sortComparator = new FirstNameComparator();
+        } else if (option == FIRST_NAME && option2 == DESCENDING) {
+            sortComparator = new FirstNameComparator().reversed();
+        } else if (option == LAST_NAME && option2 == ASCENDING) {
+            sortComparator = new LastNameComparator();
+        } else if (option == LAST_NAME && option2 == DESCENDING) {
+            sortComparator = new LastNameComparator().reversed();
+        } else if (option == RESULT && option2 == ASCENDING) {
+            sortComparator = new ResultComparator();
+        } else if (option == RESULT && option2 == DESCENDING) {
+            sortComparator = new ResultComparator().reversed();
         }
-    }
-
-    private void sortByParameter(Scanner scanner, List<Participant> participants) {
-        System.out.println("Po jakim parametrze posortować? (1 - imię, 2 - nazwisko, 3 - wynik)");
-        int option = scanner.nextInt();
-        if (option == FIRST_NAME) {
-            participants.sort(new FirstNameComparator());
-        } else if (option == LAST_NAME) {
-            participants.sort(new LastNameComparator());
-        } else if (option == RESULT) {
-            Collections.sort(participants);
-        }
+        return sortComparator;
     }
 
     private void addParticipantResult(String result, List<Participant> participants) {

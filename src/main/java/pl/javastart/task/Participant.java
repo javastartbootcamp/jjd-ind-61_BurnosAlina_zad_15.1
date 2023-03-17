@@ -1,6 +1,6 @@
 package pl.javastart.task;
 
-public class Participant implements Comparable<Participant> {
+public class Participant {
 
     private String firstName;
     private String lastName;
@@ -17,16 +17,15 @@ public class Participant implements Comparable<Participant> {
         return firstName + " " + lastName + ";" + result;
     }
 
-    @Override
-    public int compareTo(Participant participant) {
-        return Integer.compare(result, participant.result);
-    }
-
     public String getFirstName() {
         return firstName;
     }
 
     public String getLastName() {
         return lastName;
+    }
+
+    public int getResult() {
+        return result;
     }
 }
